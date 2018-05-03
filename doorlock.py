@@ -11,6 +11,7 @@ import datetime
 import json
 import sys
 
+face_cascade = cv2.CascadeClassifier("/home/pi/opencv-3.4.1/data/haarcascades/haarcascade_frontalface_alt.xml")
 
 print "Welcome to " + color("Face Recognition Door Lock System", "yellow")
 
@@ -134,7 +135,9 @@ def facedetect():
 		
 			buff = numpy.fromstring(stream.getvalue(), dtype=numpy.uint8)
 			image = cv2.imdecode(buff, 1)
-			face_cascade = cv2.CascadeClassifier("/home/pi/opencv-3.4.1/data/haarcascades/haarcascade_frontalface_alt.xml")
+			#cv2.imshow("show", image)
+			#cv2.waitKey(1)
+			#face_cascade = cv2.CascadeClassifier("/home/pi/opencv-3.4.1/data/haarcascades/haarcascade_frontalface_alt.xml")
 			gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 			faces = face_cascade.detectMultiScale(gray, 1.5, 3)
 
@@ -233,13 +236,13 @@ def facedetect():
 
 
 			print color("[DoorLock System]", "yellow") + "No face detected %d/15" % c		
-
 		else:
-
-
-			b = 2
-			print color("[DoorLock System]", "yellow") + "Returning to Sensor detecting mode . . ."
-			sensordetect()
+			if  len(faces) >= 2:
+				print color("[Notification]", "cyan") + "Only 1 person can be scan to authroize "
+			else:
+				b = 2
+				print color("[DoorLock System]", "yellow") + "Returning to Sensor detecting mode . . ."
+				sensordetect()
 
 
 
